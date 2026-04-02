@@ -7,24 +7,19 @@ public class FinalizedRecord extends ProcessedRecord {
 
     // ----- Constructor: full parameters -----
     public FinalizedRecord(Client client, Car car, Agent agent,
-            String startDate, String endDate,
-            int rentalDays, double baseCost,
+            SimpleDate startDate, SimpleDate endDate, int rentalDays, double baseCost,
             InsuranceOption insuranceOption,
             Discount discount,
             double depositAmount,
             PaymentDetails paymentDetails,
             PickupDetails pickupDetails) {
-        super(client, car, agent, startDate, endDate,
-                rentalDays, baseCost, insuranceOption, discount, depositAmount);
+        super(client, car, agent, startDate, endDate, rentalDays, baseCost, insuranceOption, discount, depositAmount);
 
         if (paymentDetails == null) {
             throw new IllegalArgumentException("Payment details cannot be null");
         }
         if (pickupDetails == null) {
             throw new IllegalArgumentException("Pickup details cannot be null");
-        }
-        if (!paymentDetails.isPaymentConfirmed()) {
-            throw new IllegalArgumentException("Payment must be confirmed before finalizing booking");
         }
 
         this.paymentDetails = paymentDetails;
@@ -32,9 +27,7 @@ public class FinalizedRecord extends ProcessedRecord {
     }
 
     // ----- Constructor: build from an existing ProcessedRecord -----
-    public FinalizedRecord(ProcessedRecord pr,
-            PaymentDetails paymentDetails,
-            PickupDetails pickupDetails) {
+    public FinalizedRecord(ProcessedRecord pr, PaymentDetails paymentDetails, PickupDetails pickupDetails) {
         super(pr, pr.getInsuranceOption(), pr.getDiscount(), pr.getDepositAmount());
 
         if (paymentDetails == null) {
@@ -42,9 +35,6 @@ public class FinalizedRecord extends ProcessedRecord {
         }
         if (pickupDetails == null) {
             throw new IllegalArgumentException("Pickup details cannot be null");
-        }
-        if (!paymentDetails.isPaymentConfirmed()) {
-            throw new IllegalArgumentException("Payment must be confirmed before finalizing booking");
         }
 
         this.paymentDetails = paymentDetails;
@@ -81,8 +71,8 @@ public class FinalizedRecord extends ProcessedRecord {
                 "client=" + getClient() +
                 ", car=" + getCar() +
                 ", agent=" + getAgent() +
-                ", startDate='" + getStartDate() + '\'' +
-                ", endDate='" + getEndDate() + '\'' +
+                ", startDate=" + getStartDate() +
+                ", endDate=" + getEndDate() +
                 ", rentalDays=" + getRentalDays() +
                 ", baseCost=" + getBaseCost() +
                 ", insuranceOption=" + getInsuranceOption() +

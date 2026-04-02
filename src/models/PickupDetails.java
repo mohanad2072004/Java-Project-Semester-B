@@ -3,14 +3,14 @@ package models;
 public class PickupDetails {
 
     private String pickupBranch;
-    private String pickupDate; // format: DD/MM/YYYY
+    private SimpleDate pickupDate;
     private String specialInstructions;
 
-    public PickupDetails(String pickupBranch, String pickupDate, String specialInstructions) {
+    public PickupDetails(String pickupBranch, SimpleDate pickupDate, String specialInstructions) {
         if (pickupBranch == null || pickupBranch.isEmpty()) {
             throw new IllegalArgumentException("Pickup branch cannot be empty");
         }
-        if (pickupDate == null || pickupDate.isEmpty()) {
+        if (pickupDate == null) {
             throw new IllegalArgumentException("Pickup date cannot be empty");
         }
         this.pickupBranch = pickupBranch;
@@ -22,7 +22,7 @@ public class PickupDetails {
         return pickupBranch;
     }
 
-    public String getPickupDate() {
+    public SimpleDate getPickupDate() {
         return pickupDate;
     }
 
@@ -37,8 +37,8 @@ public class PickupDetails {
         this.pickupBranch = pickupBranch;
     }
 
-    public void setPickupDate(String pickupDate) {
-        if (pickupDate == null || pickupDate.isEmpty()) {
+    public void setPickupDate(SimpleDate pickupDate) {
+        if (pickupDate == null) {
             throw new IllegalArgumentException("Pickup date cannot be empty");
         }
         this.pickupDate = pickupDate;
@@ -52,7 +52,7 @@ public class PickupDetails {
     public String toString() {
         return "PickupDetails{" +
                 "pickupBranch='" + pickupBranch + '\'' +
-                ", pickupDate='" + pickupDate + '\'' +
+                ", pickupDate=" + pickupDate +
                 ", specialInstructions='" + specialInstructions + '\'' +
                 '}';
     }

@@ -127,6 +127,9 @@ public class Car {
     }
 
     public void setFeatures(Features features) {
+        if (features == null) {
+            throw new IllegalArgumentException("Features cannot be null");
+        }
         this.features = features;
     }
 
@@ -135,6 +138,9 @@ public class Car {
     }
 
     public void setDetails(InsuranceDetails details) {
+        if (details == null) {
+            throw new IllegalArgumentException("Insurance details cannot be null");
+        }
         this.details = details;
     }
 

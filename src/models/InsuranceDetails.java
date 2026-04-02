@@ -26,6 +26,9 @@ public class InsuranceDetails {
     }
 
     public void setInsuranceProvider(String insuranceProvider) {
+        if (insuranceProvider == null || insuranceProvider.trim().isEmpty()) {
+            throw new IllegalArgumentException("Insurance provider cannot be empty");
+        }
         this.insuranceProvider = insuranceProvider;
     }
 
@@ -34,6 +37,9 @@ public class InsuranceDetails {
     }
 
     public void setInsuranceProviderAddress(String insuranceProviderAddress) {
+        if (insuranceProviderAddress == null || insuranceProviderAddress.trim().isEmpty()) {
+            throw new IllegalArgumentException("Insurance provider address cannot be empty");
+        }
         this.insuranceProviderAddress = insuranceProviderAddress;
     }
 
@@ -42,6 +48,9 @@ public class InsuranceDetails {
     }
 
     public void setInsuranceProviderPhoneNumber(String insuranceProviderPhoneNumber) {
+        if (insuranceProviderPhoneNumber == null || insuranceProviderPhoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Insurance provider phone number cannot be empty");
+        }
         this.insuranceProviderPhoneNumber = insuranceProviderPhoneNumber;
     }
 

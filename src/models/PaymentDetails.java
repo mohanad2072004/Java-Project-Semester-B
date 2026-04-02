@@ -77,8 +77,8 @@ public class PaymentDetails {
         this.paymentMethod = paymentMethod;
     }
 
-    public void setPaymentConfirmed(boolean paymentConfirmed) {
-        this.paymentConfirmed = paymentConfirmed;
+    public void confirmPayment() {
+        this.paymentConfirmed = true;
     }
 
     @Override

@@ -14,6 +14,7 @@ import models.PaymentDetails;
 import models.PickupDetails;
 import models.ProcessedRecord;
 import models.RentalSystem;
+import models.SimpleDate;
 
 public class CarRentalImplementer implements CRMS {
 
@@ -24,23 +25,11 @@ public class CarRentalImplementer implements CRMS {
     ArrayList<Car> cars = new ArrayList<>();
     ArrayList<Agent> agents = new ArrayList<>();
 
-    for (int i = 0; i < numOfClients; i++) {
-      clients.add(null);
-    }
-
-    for (int i = 0; i < numOfCars; i++) {
-      cars.add(null);
-    }
-
-    for (int i = 0; i < numOfAgents; i++) {
-      agents.add(null);
-    }
-
     return new RentalSystem(agents, clients, cars);
   }
 
   @Override
-  public BookingRecord book(Client client, Car car, Agent agent) {
+  public BookingRecord book(Client client, Car car, Agent agent, SimpleDate startDate, SimpleDate endDate) {
 
     if (client == null) {
       throw new IllegalArgumentException("Client cannot be null");
@@ -58,9 +47,15 @@ public class CarRentalImplementer implements CRMS {
       throw new IllegalArgumentException("Car is not available for booking");
     }
 
-    int rentalDays = 5;
-    String startDate = "01/04/2026";
-    String endDate = "06/04/2026";
+    if (startDate == null || endDate == null) {
+      throw new IllegalArgumentException("Dates cannot be null");
+    }
+
+    int rentalDays = SimpleDate.rentalDays(startDate, endDate);
+
+    if (rentalDays <= 0) {
+      throw new IllegalArgumentException("End date must be after start date");
+    }
 
     double baseCost = car.getDailyRate() * rentalDays;
 
@@ -75,22 +70,15 @@ public class CarRentalImplementer implements CRMS {
   }
 
   @Override
-  public ProcessedRecord process(BookingRecord bookingRecord) {
+  public ProcessedRecord process(
+      BookingRecord bookingRecord,
+      InsuranceOption insuranceOption,
+      Discount discount,
+      double depositAmount) {
 
     if (bookingRecord == null) {
       throw new IllegalArgumentException("Booking record cannot be null");
     }
-
-    InsuranceOption insuranceOption = new InsuranceOption(
-        "Standard",
-        100.0,
-        "Basic accident and theft coverage");
-
-    Discount discount = new Discount(
-        "Promotional",
-        10.0);
-
-    double depositAmount = 500.0;
 
     return new ProcessedRecord(
         bookingRecord,
@@ -100,7 +88,7 @@ public class CarRentalImplementer implements CRMS {
   }
 
   @Override
-  public FinalizedRecord finalizeBooking(ProcessedRecord processedRecord) {
+  public FinalizedRecord finalize(ProcessedRecord processedRecord) {
 
     if (processedRecord == null) {
       throw new IllegalArgumentException("Processed record cannot be null");
@@ -113,10 +101,8 @@ public class CarRentalImplementer implements CRMS {
 
     PickupDetails pickupDetails = new PickupDetails(
         processedRecord.getAgent().getBranch().getRentalBranch(),
-        "07/04/2026",
+        processedRecord.getStartDate(),
         "Bring driving license and payment confirmation");
-
-    processedRecord.getCar().setAvailable(false);
 
     return new FinalizedRecord(
         processedRecord,

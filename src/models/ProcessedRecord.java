@@ -8,13 +8,15 @@ public class ProcessedRecord extends BookingRecord {
     private double totalCost; // baseCost + insuranceCost - discount amount
 
     // ----- Constructor -----
-    public ProcessedRecord(Client client, Car car, Agent agent,
-            String startDate, String endDate,
-            int rentalDays, double baseCost,
+    public ProcessedRecord(Client client, Car car, Agent agent, SimpleDate startDate, SimpleDate endDate,
+            int rentalDays,
+            double baseCost,
             InsuranceOption insuranceOption,
             Discount discount,
             double depositAmount) {
         super(client, car, agent, startDate, endDate, rentalDays, baseCost);
+
+        this.totalCost = calculateTotalCost(baseCost, insuranceOption, discount);
 
         if (depositAmount < 0) {
             throw new IllegalArgumentException("Deposit amount cannot be negative");
@@ -26,7 +28,6 @@ public class ProcessedRecord extends BookingRecord {
         this.insuranceOption = insuranceOption;
         this.discount = discount;
         this.depositAmount = depositAmount;
-        this.totalCost = calculateTotalCost(baseCost, insuranceOption, discount);
     }
 
     // ----- Constructor: build from an existing BookingRecord -----
@@ -34,9 +35,10 @@ public class ProcessedRecord extends BookingRecord {
             InsuranceOption insuranceOption,
             Discount discount,
             double depositAmount) {
-        super(br.getClient(), br.getCar(), br.getAgent(),
-                br.getStartDate(), br.getEndDate(),
-                br.getRentalDays(), br.getBaseCost());
+        super(br.getClient(), br.getCar(), br.getAgent(), br.getStartDate(), br.getEndDate(), br.getRentalDays(),
+                br.getBaseCost());
+
+        this.totalCost = calculateTotalCost(br.getBaseCost(), insuranceOption, discount);
 
         if (depositAmount < 0) {
             throw new IllegalArgumentException("Deposit amount cannot be negative");
@@ -48,7 +50,6 @@ public class ProcessedRecord extends BookingRecord {
         this.insuranceOption = insuranceOption;
         this.discount = discount;
         this.depositAmount = depositAmount;
-        this.totalCost = calculateTotalCost(br.getBaseCost(), insuranceOption, discount);
     }
 
     // ----- Helper: compute total cost -----
@@ -112,8 +113,8 @@ public class ProcessedRecord extends BookingRecord {
                 "client=" + getClient() +
                 ", car=" + getCar() +
                 ", agent=" + getAgent() +
-                ", startDate='" + getStartDate() + '\'' +
-                ", endDate='" + getEndDate() + '\'' +
+                ", startDate=" + getStartDate() +
+                ", endDate=" + getEndDate() +
                 ", rentalDays=" + getRentalDays() +
                 ", baseCost=" + getBaseCost() +
                 ", insuranceOption=" + insuranceOption +

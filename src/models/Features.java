@@ -40,6 +40,9 @@ public class Features {
     }
 
     public void setSeatingCapacity(int seatingCapacity) {
+        if (seatingCapacity <= 0) {
+            throw new IllegalArgumentException("Invalid seats");
+        }
         this.seatingCapacity = seatingCapacity;
     }
 
@@ -48,6 +51,9 @@ public class Features {
     }
 
     public void setCategory(String category) {
+        if (category == null || category.trim().isEmpty()) {
+            throw new IllegalArgumentException("Category cannot be empty");
+        }
         this.category = category;
     }
 

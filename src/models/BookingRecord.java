@@ -5,15 +5,14 @@ public class BookingRecord {
     private Client client;
     private Car car;
     private Agent agent;
-    private String startDate; // format: DD/MM/YYYY
-    private String endDate; // format: DD/MM/YYYY
+    private SimpleDate startDate; // format: DD/MM/YYYY
+    private SimpleDate endDate; // format: DD/MM/YYYY
     private int rentalDays;
     private double baseCost; // daily rate * rental days
 
     // ----- Constructor: full objects -----
     public BookingRecord(Client client, Car car, Agent agent,
-            String startDate, String endDate,
-            int rentalDays, double baseCost) {
+            SimpleDate startDate, SimpleDate endDate, int rentalDays, double baseCost) {
         if (client == null) {
             throw new IllegalArgumentException("Client cannot be null");
         }
@@ -34,20 +33,20 @@ public class BookingRecord {
             throw new IllegalArgumentException("Base cost cannot be negative");
         }
 
-        if (startDate == null || startDate.isEmpty()) {
+        if (startDate == null) {
             throw new IllegalArgumentException("Start date cannot be empty");
         }
 
-        if (endDate == null || endDate.isEmpty()) {
+        if (endDate == null) {
             throw new IllegalArgumentException("End date cannot be empty");
         }
 
-        this.client = client;
-        this.car = car;
-        this.agent = agent;
         this.startDate = startDate;
         this.endDate = endDate;
         this.rentalDays = rentalDays;
+        this.client = client;
+        this.car = car;
+        this.agent = agent;
         this.baseCost = baseCost;
     }
 
@@ -64,11 +63,11 @@ public class BookingRecord {
         return agent;
     }
 
-    public String getStartDate() {
+    public SimpleDate getStartDate() {
         return startDate;
     }
 
-    public String getEndDate() {
+    public SimpleDate getEndDate() {
         return endDate;
     }
 
@@ -93,19 +92,20 @@ public class BookingRecord {
         this.agent = agent;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(SimpleDate startDate) {
+        if (startDate == null)
+            throw new IllegalArgumentException("Start date cannot be null");
         this.startDate = startDate;
+        // Recalculate rentalDays
+        this.rentalDays = SimpleDate.rentalDays(this.startDate, this.endDate);
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(SimpleDate endDate) {
+        if (endDate == null)
+            throw new IllegalArgumentException("End date cannot be null");
         this.endDate = endDate;
-    }
-
-    public void setRentalDays(int rentalDays) {
-        if (rentalDays <= 0) {
-            throw new IllegalArgumentException("Rental days must be greater than 0");
-        }
-        this.rentalDays = rentalDays;
+        // Recalculate rentalDays
+        this.rentalDays = SimpleDate.rentalDays(this.startDate, this.endDate);
     }
 
     public void setBaseCost(double baseCost) {
@@ -121,9 +121,9 @@ public class BookingRecord {
                 "client=" + client +
                 ", car=" + car +
                 ", agent=" + agent +
-                ", startDate='" + startDate + '\'' +
-                ", endDate='" + endDate + '\'' +
-                ", rentalDays=" + rentalDays +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", rentalDays=" + getRentalDays() +
                 ", baseCost=" + baseCost +
                 '}';
     }

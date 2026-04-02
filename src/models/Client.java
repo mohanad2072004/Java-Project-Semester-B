@@ -50,6 +50,9 @@ public class Client {
     }
 
     public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
         this.name = name;
     }
 
@@ -58,6 +61,9 @@ public class Client {
     }
 
     public void setSurname(String surname) {
+        if (surname == null || surname.trim().isEmpty()) {
+            throw new IllegalArgumentException("Surname cannot be empty");
+        }
         this.surname = surname;
     }
 
@@ -66,6 +72,9 @@ public class Client {
     }
 
     public void setAge(int age) {
+        if (age < 18) {
+            throw new IllegalArgumentException("Client must be at least 18 years old");
+        }
         this.age = age;
     }
 
